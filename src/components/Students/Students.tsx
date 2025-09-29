@@ -1,21 +1,23 @@
 'use client';
 
-import useGroups from '@/hooks/useGroups';
-import type GroupInterface from '@/types/GroupInterface';
-import styles from './Groups.module.scss';
+import useStudents from '@/hooks/useStudents';
+import type StudentInterface from '@/types/StudentInterface';
+import styles from './Students.module.scss';
 
-const Groups = (): React.ReactElement => {
-  const { groups } = useGroups();
+const Students = (): React.ReactElement => {
+  const { Students } = useStudents();
 
   return (
-    <div className={styles.Groups}>
-      {groups.map((group: GroupInterface) => (
-        <h2 key={group.id}>
-          {group.name}
+    <div className={styles.Students}>
+      <h1>Students</h1>
+      {Students.map((student: StudentInterface) => (
+        
+        <h2 key={student.id} >
+          {`${student.first_name} ${student.last_name} ${student.middle_name} ${student.groupId}`}
         </h2>
       ))}
     </div>
   );
 };
 
-export default Groups;
+export default Students;
