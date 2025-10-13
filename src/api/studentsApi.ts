@@ -33,12 +33,25 @@ export const deleteStudentApi = async (studentId: number): Promise<number> => {
   }
 };
 
-export const createStudentApi = async (student: Omit<StudentInterface, 'id' | 'isDeleted'>): Promise<StudentInterface> => {
+export const createStudentApi = async (
+  student: Omit<StudentInterface, 'id' | 'isDeleted'>
+): Promise<StudentInterface> => {
   const response = await fetch('/api/students', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(student),
   });
-  if (!response.ok) throw new Error('Failed to create student');
+
+  if (!response.ok) {
+    let serverMessage = '';
+    try {
+      const errorData = await response.json();
+      serverMessage = errorData.message || JSON.stringify(errorData);
+    } catch {
+      serverMessage = `${response.status} ${response.statusText}`;
+    }
+    throw new Error(`Failed to create student: ${serverMessage}`);
+  }
+
   return response.json();
 };

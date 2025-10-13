@@ -3,14 +3,14 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { deleteStudentApi, getStudentsApi, createStudentApi } from '@/api/studentsApi'; // ← добавьте createStudentApi
+import { deleteStudentApi, getStudentsApi, createStudentApi } from '@/api/studentsApi'; 
 import type StudentInterface from '@/types/StudentInterface';
 
 // Обновлённый интерфейс
 interface StudentsHookInterface {
   students: StudentInterface[];
   deleteStudentMutate: (studentId: number) => void;
-  addStudentMutate: (student: Omit<StudentInterface, 'id' | 'isDeleted'>) => void; // ← новое
+  addStudentMutate: (student: Omit<StudentInterface, 'id' | 'isDeleted'>) => void; 
 }
 
 const useStudents = (): StudentsHookInterface => {
@@ -19,11 +19,8 @@ const useStudents = (): StudentsHookInterface => {
   const { data } = useQuery({
     queryKey: ['students'],
     queryFn: () => getStudentsApi(),
-    // enabled: false — уберите, если хотите автоматическую загрузку
-    // или оставьте, но тогда вызывайте refetch в нужном месте
+    
   });
-
-  // Мутация удаления (без изменений)
   const deleteStudentMutation = useMutation({
     mutationFn: (studentId: number) => deleteStudentApi(studentId),
     onMutate: async (studentId) => {
@@ -46,23 +43,23 @@ const useStudents = (): StudentsHookInterface => {
     },
   });
 
-  // ✅ НОВАЯ мутация: добавление студента
   const createStudentMutation = useMutation({
+    // вызов API создания
     mutationFn: (newStudent: Omit<StudentInterface, 'id' | 'isDeleted'>) => createStudentApi(newStudent),
+    // оптимистичная мутация (обновляем данные на клиенте до API запроса create)
     onMutate: async (newStudent) => {
       await queryClient.cancelQueries({ queryKey: ['students'] });
+      // оптимистичная мутация (обновляем данные на клиенте до API запроса delete)
       const previousStudents = queryClient.getQueryData<StudentInterface[]>(['students']);
-      // Оптимистично добавляем студента с временным id (например, отрицательным)
-      // или просто без id — но API должен вернуть полный объект
-      // Пока не знаем id, поэтому не добавляем в список до onSuccess
+     // TODO: add student in optimisic 
       return { previousStudents };
     },
     onError: (err, newStudent, context) => {
       console.error('Create error:', err);
       queryClient.setQueryData(['students'], context?.previousStudents);
     },
+    // обновляем данные в случаи успешного выполнения mutationFn: async (studentId: number) => createStudentApi(studentId),
     onSuccess: (createdStudent) => {
-      // Добавляем нового студента в кэш
       queryClient.setQueryData<StudentInterface[]>(['students'], (old) => [
         ...(old ?? []),
         createdStudent,
@@ -73,7 +70,7 @@ const useStudents = (): StudentsHookInterface => {
   return {
     students: data ?? [],
     deleteStudentMutate: deleteStudentMutation.mutate,
-    addStudentMutate: createStudentMutation.mutate, // ← экспортируем
+    addStudentMutate: createStudentMutation.mutate, 
   };
 };
 
