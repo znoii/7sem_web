@@ -1,6 +1,6 @@
 // src/app/api/students/route.ts
 import { NextRequest } from 'next/server';
-import { getStudentsDb, createStudentDb } from '@/db/studentDb';
+import { getStudentsDb, addStudentDb } from '@/db/studentDb';
 
 export async function GET() {
   try {
@@ -24,10 +24,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newStudent = await createStudentDb({
+    const newStudent = await addStudentDb({
+      
       firstName,
       lastName,
       middleName,
+      contacts: '',
       groupId: Number(groupId),
     });
 

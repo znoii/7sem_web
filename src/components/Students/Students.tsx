@@ -11,18 +11,38 @@ const Students = (): React.ReactElement => {
 
   const onDeleteHandler = (studentId: number): void => {
     if (confirm('Удалить студента?')) {
+      debugger;
+      console.log('OnDeleteHandler',studentId);
+
       deleteStudentMutate(studentId);
     }
   };
 
+
+  /**
+   * Добавление студента — обработчик события нажатия "добавить"
+   * @param studentFormField Форма студента
+   */
+  const onAddHandler = (studentFormField: any): void => {
+    debugger;
+    console.log('Добавление студента', studentFormField);
+
+    addStudentMutate({
+      id: -1,
+      ...studentFormField,
+      groupId: 1
+    });
+  };
+
   return (
     <div className={styles.Students}>
-      <AddStudent onAdd={addStudentMutate} />
+      <AddStudent onAdd={onAddHandler} />
       {students.map((student) => (
         <Student key={student.id} student={student} onDelete={onDeleteHandler} />
       ))}
     </div>
   );
 };
+
 
 export default Students;
