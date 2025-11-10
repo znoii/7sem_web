@@ -15,7 +15,21 @@ export const getStudentsApi = async (): Promise<StudentInterface[]> => {
     return [] as StudentInterface[];
   }
 };
+export const getStudentByIdApi = async (studentId: number): Promise<StudentInterface | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}students/${studentId}`);
 
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
+    }
+    const student = await response.json() as StudentInterface;
+    return student;
+  }
+  catch (err) {
+    console.log('>>> getStudentByIdApi', err);
+    return null;
+  }
+};
 export const deleteStudentApi = async (studentId: number): Promise<number> => {
   console.log('DeleteStudentsApi',studentId);
   debugger;
@@ -28,6 +42,8 @@ export const deleteStudentApi = async (studentId: number): Promise<number> => {
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
     }
+    console.log('DeleteStudentsApi ok',studentId);
+    debugger;
     return studentId;
   }
   catch (err) {
@@ -35,7 +51,12 @@ export const deleteStudentApi = async (studentId: number): Promise<number> => {
     return -1;
   }
 };
-
+export interface AddStudentPayload {
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  groupId?: number;
+}
 export const addStudentApi = async (
   student: Omit<StudentInterface, 'id' | 'isDeleted'>
 ): Promise<StudentInterface> => {

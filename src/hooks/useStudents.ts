@@ -4,7 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { deleteStudentApi, getStudentsApi, addStudentApi } from '@/api/studentsApi'; 
+
 import type StudentInterface from '@/types/StudentInterface';
+import type GroupInterface from '@/types/GroupInterface';
 
 // Обновлённый интерфейс
 interface StudentsHookInterface {
@@ -26,11 +28,14 @@ const useStudents = (): StudentsHookInterface => {
     onMutate: async (studentId) => {
       await queryClient.cancelQueries({ queryKey: ['students'] });
       const previousStudents = queryClient.getQueryData<StudentInterface[]>(['students']);
+      
       const updatedStudents = (previousStudents ?? []).map((student) =>
         student.id === studentId ? { ...student, isDeleted: true } : student
       );
       queryClient.setQueryData(['students'], updatedStudents);
-      return { previousStudents };
+      console.log('deleteStudentMutation onMutate', previousStudents, updatedStudents);
+      debugger;
+      return { previousStudents, updatedStudents};
     },
     onError: (err, studentId, context) => {
       console.error('Delete error:', err);
@@ -64,7 +69,7 @@ const useStudents = (): StudentsHookInterface => {
         isDeleted: false,
       };
       const updatedStudents = [...(previousStudents ?? []), optimisticStudent];
-
+      
       queryClient.setQueryData(['students'], updatedStudents);
 
       console.log('addStudentMutation onMutate', previousStudents, updatedStudents);

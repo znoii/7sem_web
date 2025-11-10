@@ -4,7 +4,7 @@ import useStudents from '@/hooks/useStudents';
 import type StudentInterface from '@/types/StudentInterface';
 import styles from './Students.module.scss';
 import Student from './Student/Student';
-import AddStudent from './Student/AddStudent/AddStudent';
+import AddStudent from './AddStudent/AddStudent';
 
 const Students = (): React.ReactElement => {
   const { students, deleteStudentMutate, addStudentMutate } = useStudents();
@@ -23,22 +23,20 @@ const Students = (): React.ReactElement => {
    * Добавление студента — обработчик события нажатия "добавить"
    * @param studentFormField Форма студента
    */
-  const onAddHandler = (studentFormField: any): void => {
+const handleAddStudent = (values: { firstName: string; lastName: string; middleName: string; groupId: number }): void => {
     debugger;
-    console.log('Добавление студента', studentFormField);
+    console.log('Добавление студента', values);
 
-    addStudentMutate({
-      id: -1,
-      ...studentFormField,
-      groupId: 1
-    });
+     addStudentMutate({ ...values });
   };
 
   return (
     <div className={styles.Students}>
-      <AddStudent onAdd={onAddHandler} />
+      <AddStudent onSubmit={handleAddStudent} />
       {students.map((student) => (
-        <Student key={student.id} student={student} onDelete={onDeleteHandler} />
+        <Student key={student.id} 
+        student={student} 
+        onDelete={onDeleteHandler} />
       ))}
     </div>
   );
@@ -46,3 +44,4 @@ const Students = (): React.ReactElement => {
 
 
 export default Students;
+
