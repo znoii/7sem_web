@@ -1,5 +1,6 @@
 import type StudentInterface from '@/types/StudentInterface';
 import styles from './Student.module.scss';
+import Link from 'next/link';
 
 interface Props {
   student: StudentInterface;
@@ -13,8 +14,13 @@ const Student = ({ student, onDelete }: Props): React.ReactElement => {
 
   return (
     <div className={`${styles.Student} ${student.isDeleted ? styles['--isDeleted'] : '' } `}>
-      {`${student.id} - ${student.lastName} ${student.firstName} ${student.middleName}`}
-      <button onClick={onDeleteHandler}>Удалить</button>
+      <Link href={`/students/${student.id}`} className={styles.StudentLink}>
+        <span>{`${student.id} - ${student.lastName} ${student.firstName} ${student.middleName}`}</span>
+        {student.group && (
+          <span className={styles.GroupName}>{student.group.name}</span>
+        )}
+      </Link>
+      <button className={styles.DeleteButton} onClick={onDeleteHandler}>Удалить</button>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import useStudent from '@/hooks/useStudent';
 import BackNavigation from '@/components/BackNavigation/BackNavigation';
-import styles from './Student.module.scss';
+import styles from '@/components/Students/Student/Student.module.scss';
 
 const Student = (): React.ReactElement => {
   const params = useParams();

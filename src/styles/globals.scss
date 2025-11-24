@@ -1,12 +1,22 @@
 @use './main';
 
 :root {  
-  --color: #272727;
-  --color2: #FFF;
-  --color3: #F00;
-  --background: #FFF;
-  --background2: #E1E1E1;
-  --background3: #434343;  
+  --color: #1a1a1a;
+  --color2: #FFFFFF;
+  --color3: #888888;
+  --background: #F5F7FA;
+  --background2: #FFFFFF;
+  --background3: #E8ECF1;
+  --primary: #bf53fd;
+  --primary-hover: #bee5ff;
+  --primary-light: #E3F2FD;
+  --success: #52C41A;
+  --danger: #771e1f;
+  --danger-hover: #d13a3a;
+  --border: #D9D9D9;
+  --border-hover: #B3B3B3;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
 }
 
 @media (prefers-color-scheme: dark) {
